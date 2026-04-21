@@ -1,12 +1,24 @@
 # Live GeoGuessr Dashboard
 
-![Dashboard](https://geoguessrdashboard-kajzyegitrpucxqnvrshpb.streamlit.app/)
 
-A personal data engineering and analytics project built on top of my own GeoGuessr Duels history — 540+ ranked games, fully automated, live at the click of a link.
+<img width="1882" height="791" alt="Image" src="https://github.com/user-attachments/assets/d6f8acc0-b633-444d-8ed1-8e127c96d928" />
 
-GeoGuessr's native statistics are sparse and surface-level. This project builds everything that's missing: per-country accuracy, distance delta against opponents, regional breakdowns within large countries, and a data-driven training priority system — all updated automatically as new games are played.
 
-**Live dashboard →** [geoguessrdashboard-kajzyegitrpucxqnvrshpb.streamlit.app](https://geoguessrdashboard-kajzyegitrpucxqnvrshpb.streamlit.app/)
+
+---
+
+A data engineering and analytics project built on top of my own GeoGuessr Duels history, with 500+ ranked games, fully automated and updated every day.
+
+GeoGuessr's native statistics are sparse and surface-level. This project builds everything that's missing: per-country scores, distance delta against opponents, regional breakdowns within large countries, and a data-driven training priority system.
+
+[**Live dashboard**](https://geoguessrdashboard-kajzyegitrpucxqnvrshpb.streamlit.app/)
+
+
+---
+
+## Disclaimer
+
+This project does not publish, distribute or condone the use of any tooling that accesses GeoGuessr's internal infrastructure in violation of their Terms of Service. 
 
 ---
 
@@ -15,7 +27,7 @@ GeoGuessr's native statistics are sparse and surface-level. This project builds 
 | File | Description |
 |---|---|
 | `gitdashboard.py` | Streamlit dashboard application |
-| `dataprocessing.py` | Full data processing pipeline — cleans, aggregates and builds all output tables |
+| `dataprocessing.py` | Full data processing pipeline: cleaning, aggregation and building of all output tables |
 | `Data_visualizations.ipynb` | Exploratory analysis and visualizations |
 | `games.csv` | Game-level aggregation (result, avg distances, game mode) |
 | `roundsfinal.csv` | Processed round-level data |
@@ -23,27 +35,44 @@ GeoGuessr's native statistics are sparse and surface-level. This project builds 
 | `country_training_ranking.csv` | Training priority rankings with component scores |
 | `requirements.txt` | Python dependencies |
 
-> The data pipeline runs automatically on a schedule and commits updated CSVs to this repository. The dashboard reads directly from these files — no manual intervention required.
+> The data pipeline runs automatically on a schedule and commits updated CSVs to this repository. The dashboard reads directly from these files.
+
 
 ---
 
-## Data
-
-**Source:** Personal GeoGuessr Duels game history  
-**Scope:** 540+ ranked games across Standard, No Move and NMPZ modes  
-**Granularity:** Individual round-level data — coordinates, guess distances, health deltas, timing
-
-The raw data is obtained through a private pipeline that is not part of this repository. What lives here is everything downstream: the processing, the analysis, and the dashboard.
+<img width="1136" height="1450" alt="Image" src="https://github.com/user-attachments/assets/de7d0798-6268-4a65-9c86-0f83bea75bf6" />
 
 ---
+
+## Automation
+
+A scheduled pipeline runs every day via GitHub Actions entirely without manual intervention. On each run:
+
+1. New games played since the last run are detected automatically
+2. Round data is fetched incrementally (only new games)
+3. All four CSVs are rebuilt with the latest data
+4. Updated files are committed and pushed to this repository
+5. Streamlit Cloud detects the new commit and the dashboard updates
+
+---
+
+## Design Philosophy
+
+Geoguessr is based on distance, not borders, so average distance and average delta are much more important when dictating a game than "guessed country X right". However, per-country analysis is better for immediate conclusions, as well as the most enjoyable, and it is still particularly important as well as heavily correlated with distance and winning. A player who gets all countries right will win an absolute majority of their games. 
+
+In conclusion, country accuracy is the most intuitive metric but distance delta is the most actionable. For example, guessing eastern Czechia for Slovakia costs almost nothing, while guessing Oregon for Massachusetts costs thousands of kilometres. 
+
+Thus, both metrics and analyses were maintained with the training priority system built around delta, the most important metric when identifying the most important areas for closing the gap against opponents, followed by round frequency (how many times a country atually shows up, as the mainstream countries even if "boring" rounds will decide 8/10 games).
+
+Regional analysis for the 9 larger countries in the game was added for additional metrics and to help analysis in these larger countries. A 60% accuracy rate in Russia tells you nothing about whether you're losing on Siberian roads or Moscow suburbs.
 
 ## Data Processing Pipeline
 
-`dataprocessing.py` takes the raw round data and produces the four CSV files above. The steps:
+`dataprocessing.py` takes the raw round data and produces the four CSV files above:
 
 ### 1. Cleaning
 - Drops Street View metadata columns irrelevant to performance analysis
-- Removes rows with missing coordinates or scores — essential fields for distance metrics
+- Removes rows with missing coordinates or scores
 - Imputes missing country codes via reverse geocoding from lat/lng coordinates
 - Standardises timestamps to UTC
 
@@ -54,13 +83,14 @@ The raw data is obtained through a private pipeline that is not part of this rep
 
 ### 3. Game-Level Aggregation
 Rounds grouped by game to produce:
-- Final health for both players → `result` (W/L)
+- Final health for both players and final `result` (W/L)
 - Average guess distances in metres and kilometres
 - Game mode, rated status, team duels flag
 
 ### 4. Geographic Region Assignment
 
-For nine countries with sufficient round volume, rounds are assigned to sub-national regions using bounding box logic. First match wins — specific boxes are ordered before broader ones.
+For nine countries with sufficient round volume, rounds are assigned to sub-national regions using bounding box logic.
+
 
 | Country | Regions |
 |---|---|
@@ -74,10 +104,9 @@ For nine countries with sufficient round volume, rounds are assigned to sub-nati
 | 🇦🇷 Argentina | Norte Grande, Nuevo Cuyo, Centro, Buenos Aires, Patagonia |
 | 🇮🇳 India | Northern, Western, Central, Eastern, Southern, North Eastern Zone |
 
-This surfaces sub-country weaknesses that whole-country averages hide — e.g. strong in Southern Brazil, poor in Norte.
 
 ### 5. Country Summary
-Per country (≥3 rounds):
+Per country (≥5 rounds):
 - `accuracy_pct` — correct guess rate
 - `avg_dist_km` — mean distance error
 - `avg_delta_km` — mean distance delta vs opponent
@@ -97,9 +126,9 @@ train_priority_score = 0.40 × rounds_imp
 
 | Component | Weight | Reasoning |
 |---|---|---|
-| `delta_imp` | 55% | Primary driver — countries where opponent outguesses you most |
+| `delta_imp` | 55% | Primary driver: countries where opponent outguesses you most |
 | `rounds_imp` | 40% | Frequent countries have reliable metrics and high gameplay impact |
-| `distance_imp` | 2% | Low weight — avoids bias toward structurally hard countries (Russia vs. Malta) |
+| `distance_imp` | 2% | Low weight, avoids bias toward structurally hard countries |
 | `accuracy_imp` | 3% | Correlates with delta; minimal independent signal |
 
 All components are min-max scaled to 0–100 before weighting. Output includes a rank and a quintile bucket (Very High → Very Low).
@@ -120,30 +149,36 @@ Each panel is clickable and opens a full top-10 table with detailed metrics.
 
 ---
 
-## Automation
 
-The data pipeline runs on a schedule via GitHub Actions on a separate private repository. On each run:
-
-1. New game IDs are discovered from recent activity
-2. Round data is fetched for new games only (incremental)
-3. All four CSVs are rebuilt
-4. Updated files are committed to this repository
-
-Streamlit Cloud detects the new commit and the dashboard refreshes automatically.
-
----
 
 ## Visualizations
 
-<!-- Win rate by mode -->
-
-<!-- Country accuracy breakdown -->
-
-<!-- Distance delta vs opponent -->
-
-<!-- Training priority ranking -->
+<img width="1136" height="2508" alt="Image" src="https://github.com/user-attachments/assets/298efa92-49ee-44b2-8a3b-35c50c93d890" />
 
 ---
+<img width="1136" height="450" alt="Image" src="https://github.com/user-attachments/assets/6ad1f993-131d-4f95-8297-551313707699" />
+
+---
+<img width="1308" height="1314" alt="Image" src="https://github.com/user-attachments/assets/cd8d3c5f-82e7-4cd8-87d2-854f98df36f6" />
+
+---
+
+
+<img width="1308" height="1634" alt="Image" src="https://github.com/user-attachments/assets/73a2b9be-4386-47e7-840e-f1e124b5de1e" />
+
+
+---
+
+
+<img width="1308" height="1444" alt="Image" src="https://github.com/user-attachments/assets/7a053630-a3e2-4fb0-9534-f261c8dad459" />
+
+---
+
+<img width="1308" height="1334" alt="Image" src="https://github.com/user-attachments/assets/d0fac82e-8cc0-41be-8679-2f0680684268" />
+
+---
+
+
 
 ## Tech Stack
 
@@ -159,35 +194,3 @@ Streamlit Cloud detects the new commit and the dashboard refreshes automatically
 | Streamlit Community Cloud | Dashboard hosting |
 
 ---
-
-## Automation
-
-This is the part that makes the project live rather than static.
-
-A scheduled pipeline runs every few hours via GitHub Actions — entirely without manual intervention. Every day, without touching a single file or running a single script locally:
-
-1. New games played since the last run are discovered automatically
-2. Round data is fetched incrementally — only new games, never re-fetching what already exists
-3. All four CSVs are rebuilt with the latest data
-4. Updated files are committed and pushed to this repository
-5. Streamlit Cloud detects the new commit and the dashboard updates
-
-The result: play a game, wait a few hours, refresh the dashboard — your new results are there. No pipelines to trigger, no files to upload, no local environment needed.
-
----
-
-## Disclaimer
-
-This project does not publish, distribute or condone the use of any tooling that accesses GeoGuessr's internal infrastructure in violation of their Terms of Service. The data collection layer is intentionally kept private. Any such methods used in personal projects should be done ethically, without malicious intent, and without causing server overload. This project was built for personal learning and analytical purposes only.
-
----
-
-## Design Philosophy
-
-Country accuracy is the most intuitive metric but distance delta is the most actionable. Guessing eastern Czechia for Slovakia costs almost nothing. Guessing Oregon for Massachusetts costs thousands of kilometres. The training priority system is built around delta — closing the gap against opponents, not just improving raw accuracy.
-
-Regional analysis exists because large-country averages lie. A 60% accuracy rate in Russia tells you nothing about whether you're losing on Siberian roads or Moscow suburbs.
-
----
-
-*Pedro Salgado*
