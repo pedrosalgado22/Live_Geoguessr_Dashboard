@@ -9,7 +9,10 @@
 
 A data engineering and analytics project built on top of my own GeoGuessr Duels history, with 500+ ranked games, fully automated and updated every day.
 
-GeoGuessr's native statistics are sparse and surface-level. This project builds everything that's missing: per-country scores, distance delta against opponents, regional breakdowns within large countries, and a data-driven training priority system.
+GeoGuessr's native statistics are sparse and surface-level. This project builds everything that's missing: per-country scores, distance delta against opponents, regional breakdowns within large countries, and a data-driven training priority system. 
+
+- Highest rank: Master II
+- Current rank: Master III
 
 [**Live dashboard**](https://geoguessrdashboard-kajzyegitrpucxqnvrshpb.streamlit.app/)
 
@@ -175,6 +178,13 @@ Each panel is clickable and opens a full top-10 table with detailed metrics.
 ---
 
 <img width="1308" height="1334" alt="Image" src="https://github.com/user-attachments/assets/d0fac82e-8cc0-41be-8679-2f0680684268" />
+
+
+
+---
+
+
+See `Data_visualizations.ipynb` for additional visualizations and data breakdowns.
 
 ---
 
