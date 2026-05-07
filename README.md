@@ -43,9 +43,21 @@ This project does not publish, distribute or condone the use of any tooling that
 
 ---
 
-<img width="1136" height="1450" alt="Image" src="https://github.com/user-attachments/assets/de7d0798-6268-4a65-9c86-0f83bea75bf6" />
+<img width="2304" height="1728" alt="Image" src="https://github.com/user-attachments/assets/8eaf7fc5-2e47-483a-b039-2b6bb49a3246" />
+
+
+
+
+
+
+
+
+
+<img width="1536" height="1024" alt="Image" src="https://github.com/user-attachments/assets/a425f270-c15e-424f-8f4f-856f930f3e58" />
 
 ---
+> First hand sketch and AI mockup of the final dashboard design.
+> 
 
 ## Automation
 
@@ -156,12 +168,18 @@ Each panel is clickable and opens a full top-10 table with detailed metrics.
 
 ## Visualizations
 
+
+<img width="1136" height="1450" alt="Image" src="https://github.com/user-attachments/assets/de7d0798-6268-4a65-9c86-0f83bea75bf6" />
+
+---
+
 <img width="1136" height="2508" alt="Image" src="https://github.com/user-attachments/assets/298efa92-49ee-44b2-8a3b-35c50c93d890" />
 
 ---
 <img width="1136" height="450" alt="Image" src="https://github.com/user-attachments/assets/6ad1f993-131d-4f95-8297-551313707699" />
 
 ---
+
 <img width="1308" height="1314" alt="Image" src="https://github.com/user-attachments/assets/cd8d3c5f-82e7-4cd8-87d2-854f98df36f6" />
 
 ---
