@@ -1,8 +1,8 @@
 real_country_name,rounds,accuracy_pct,avg_dist_km,avg_delta_km,biggest_confusion,worst_region,worst_region_avg_km
-Japan,100,86.0,1462.0,83.6,"Taiwan, Province of China",,
+Japan,100,86.0,1462.0,83.6,United States,,
 Iceland,15,80.0,1388.9,167.8,Argentina,,
 Mongolia,19,78.9,882.8,-604.8,Kyrgyzstan,,
-Germany,66,78.8,389.0,58.5,Poland,,
+Germany,66,78.8,389.0,58.5,Lithuania,,
 Brazil,155,78.7,2427.1,-949.2,Argentina,Norte,3029.8
 Nigeria,46,78.3,724.7,-446.8,Ghana,,
 Jordan,13,76.9,591.7,-1055.6,Oman,,
@@ -11,7 +11,7 @@ Viet Nam,34,76.5,2396.0,707.3,Indonesia,,
 Kazakhstan,36,75.0,1035.4,-1050.1,Russian Federation,,
 United States,240,74.6,2384.4,379.1,Canada,Hawaii,8215.7
 Ghana,27,74.1,1205.5,-50.6,Nigeria,,
-India,90,73.3,2453.5,866.5,Sri Lanka,Western Zone,4248.0
+India,90,73.3,2453.5,866.5,Brazil,Western Zone,4248.0
 Bangladesh,41,73.2,640.8,-495.0,India,,
 Thailand,84,72.6,2111.6,196.3,Cambodia,,
 Kenya,43,72.1,1365.8,-1303.4,Nigeria,,
@@ -42,7 +42,7 @@ Austria,32,59.4,538.1,214.3,Germany,,
 Mexico,102,58.8,3485.4,457.7,Argentina,North,3527.0
 "Korea, Republic of",19,57.9,4094.4,1065.7,Argentina,,
 Italy,77,55.8,829.1,-307.9,Spain,,
-Rwanda,9,55.6,1099.7,-1548.3,Eswatini,,
+Rwanda,9,55.6,1099.7,-1548.3,Kenya,,
 Poland,41,53.7,1050.8,298.4,Romania,,
 Ireland,30,53.3,1179.3,527.4,United Kingdom,,
 Colombia,66,53.0,3635.4,695.0,Peru,,
@@ -77,7 +77,7 @@ Qatar,12,33.3,563.4,214.5,United Arab Emirates,,
 Uruguay,35,31.4,1966.7,-1604.4,Chile,,
 Eswatini,13,30.8,3082.2,-132.2,South Africa,,
 Ecuador,28,28.6,3921.9,258.3,Colombia,,
-Montenegro,14,28.6,593.2,-600.9,Albania,,
+Montenegro,14,28.6,593.2,-600.9,Portugal,,
 "Bolivia, Plurinational State of",34,26.5,1754.1,-1260.5,Peru,,
 Serbia,24,25.0,518.7,-891.5,Bulgaria,,
 Lesotho,8,25.0,2924.8,1129.6,South Africa,,
